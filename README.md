@@ -1,50 +1,50 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Claude%20Code-Skill-10b981?style=flat-square&logo=anthropic&logoColor=white" alt="Claude Code Skill">
   <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="License">
-  <img src="https://img.shields.io/badge/single--file-HTML-orange?style=flat-square" alt="Single File">
+  <img src="https://img.shields.io/badge/单文件-HTML-orange?style=flat-square" alt="Single File">
 </p>
 
 <h1 align="center">Claude Algorithm Visualizer</h1>
 
 <p align="center">
-  <b>Turn any LeetCode / algorithm solution into a cinematic, interactive step-by-step animation with one command.</b>
+  <b>一句话：任何力扣 / 算法题解，一键生成电影级交互式步骤动画。</b>
 </p>
 
 <p align="center">
-  <a href="README.zh.md"><img src="https://img.shields.io/badge/中文文档-Read-blue?style=flat-square" alt="中文文档"></a>
+  <a href="README.md"><img src="https://img.shields.io/badge/English-Read-blue?style=flat-square" alt="English"></a>
 </p>
 
 ---
 
-## Demo
+## 效果演示
 
 <p align="center">
-  <img src="./assets/demo.gif" width="90%" alt="Sort Colors Animation Demo">
+  <img src="./assets/demo.gif" width="90%" alt="色彩分类动画演示">
 </p>
 
 ---
 
-## Features
+## 功能特性
 
-| Feature | Description |
+| 功能 | 说明 |
 |---------|-------------|
-| **One-command generation** | Paste your code + test case → get a `.html` demo instantly |
-| **Cinematic dark UI** | Deep-space dark theme with neon accents, inspired by professional IDEs |
-| **Synced code highlighting** | Active line follows the animation frame-by-frame |
-| **Smart state cards** | Human-readable Chinese explanations of every step |
-| **Zero dependencies** | Single self-contained `.html` file — no build step, no CDN |
-| **Full playback controls** | Play / Pause / Prev / Next / Reset / Speed (0.2x–2.0x) |
-| **Keyboard-driven** | Arrow keys + Spacebar for seamless scrubbing |
-| **Responsive layout** | Collapses gracefully on screens < 900px |
-| **Multi-pattern support** | Single array, dual arrays, 2D grids, linked lists, trees |
+| **一命令生成** | 粘贴代码 + 测试用例 → 秒级输出 `.html` 演示页 |
+| **电影级深色 UI** | 深空暗色主题，配合霓虹渐变与发光特效，灵感来源于专业 IDE |
+| **代码高亮同步** | 当前执行行随动画帧逐行高亮，双向可跟踪 |
+| **智能状态卡片** | 每一步都有中文人读解释，新手友好 |
+| **零依赖** | 单文件 `.html`，无需构建、无需 CDN、断网可用 |
+| **完整播放控制** | 播放 / 暂停 / 上一步 / 下一步 / 重置 / 速率调节 (0.2x–2.0x) |
+| **键盘驱动** | ← → 空格键，播放时操控无需鼠标 |
+| **响应式布局** | 小于 900px 自动折叠为上下布局 |
+| **多模式支持** | 单数组、双数组、二维网格、链表、树形结构 |
 
 ---
 
-## Quick Start
+## 快速开始
 
-### 1. Install the Skill
+### 1. 安装 Skill
 
-Place the `skill/` folder (or the packaged `.skill` file) into your Claude Code skills directory, then restart Claude Code.
+将 `skill/` 文件夹（或打包好的 `.skill` 文件）放入 Claude Code 的 skills 目录，然后重启 Claude Code。
 
 ```bash
 # macOS / Linux
@@ -54,105 +54,101 @@ Place the `skill/` folder (or the packaged `.skill` file) into your Claude Code 
 %USERPROFILE%\.claude\skills\algo-visualizer\
 ```
 
-### 2. Invoke
+### 2. 调用
 
-In any Claude Code conversation, simply type:
+在任意 Claude Code 对话中，直接输入：
 
 ```
 /algo-visualizer
 ```
 
-Then paste:
-- Your **LeetCode problem number / title** (optional, for context)
-- Your **solution code**
-- A **small test case** (5–10 elements)
+然后提供：
+- 你的 **力扣题目号 / 标题**（可选，用于上下文）
+- 你的 **解题代码**
+- 一个 **小规模测试用例**（5–10 个元素）
 
-Claude will generate a `problem-name-demo.html` file ready to open in any browser.
+Claude 会生成一个 `problem-name-demo.html` 文件，直接用浏览器打开即可。
 
-### 3. Record & Share
+### 3. 录屏 & 分享
 
-Open the HTML, hit **Play**, and use any screen recorder (OBS, LICEcap, ScreenToGif) to capture the animation. Perfect for:
-- <img src="https://img.shields.io/badge/YouTube-Tutorial-ff0000?style=flat-square&logo=youtube"> Algorithm explanation videos
-- <img src="https://img.shields.io/badge/X/Twitter-Thread-000000?style=flat-square&logo=x"> Viral tech threads
-- <img src="https://img.shields.io/badge/Resume-Portfolio-0077b5?style=flat-square&logo=linkedin"> Portfolio pieces
+打开 HTML 页面，点击 **播放**，然后使用屏幕录制工具（OBS、LICEcap、ScreenToGif）捕捉动画。适用于：
+- <img src="https://img.shields.io/badge/Bilibili-算法讲解-00a1d6?style=flat-square&logo=bilibili"> 算法讲解视频
+- <img src="https://img.shields.io/badge/X/Twitter-技术串-000000?style=flat-square&logo=x"> 科技串文爆款
+- <img src="https://img.shields.io/badge/简历-作品集-0077b5?style=flat-square&logo=linkedin"> 作品集背书
 
 ---
 
-## Supported Models
+## 适配模型
 
-| Platform | Status | Notes |
+| 平台 | 状态 | 说明 |
 |----------|--------|-------|
-| **Claude Code (CLI)** | ✅ Fully supported | Primary target; invoke via `/algo-visualizer` |
-| **Claude 4.x (Sonnet/Opus)** | ✅ Fully supported | Best-in-class code generation & reasoning |
-| **Claude 3.5/3.7 Sonnet** | ✅ Supported | Slightly more steering may be needed for complex DP |
-| **Other Claude interfaces** | ⚠️ Manual load | Copy `SKILL.md` into system prompt |
+| **Claude Code (CLI)** | ✅ 完全支持 | 主要目标平台；通过 `/algo-visualizer` 唤醒 |
+| **Claude 4.x (Sonnet/Opus)** | ✅ 完全支持 | 代码生成与推理能力最强 |
+| **Claude 3.5/3.7 Sonnet** | ✅ 支持 | 复杂 DP 场景可能需要更多引导 |
+| **其他 Claude 接入方式** | ⚠️ 手动加载 | 将 `SKILL.md` 内容复制到系统提示词中 |
 
 ---
 
-## Optimization Highlights
+## 优化亮点
 
-> Designed for **context-window efficiency** and **visual impact**.
+> 为 **上下文窗口效率** 与 **视觉冲击力** 而设计。
 
-1. **Progressive Disclosure Architecture**
-   - SKILL.md only loads core workflow (~8KB); heavy boilerplate lives in `assets/template.html`
-   - Prevents context-bloat when multiple skills are active
+1. **渐进式披露架构 (Progressive Disclosure)**
+   - `SKILL.md` 仅加载核心工作流（约 8KB）；沉重的 HTML 脚手架存放于 `assets/template.html`
+   - 避免多 Skill 并发时的上下文膨胀
 
-2. **Token-Efficient CSS Framework**
-   - CSS custom properties (`:root` variables) ensure consistent theming without repetition
-   - All animations are GPU-composited (`transform`, `opacity`) for 60fps smoothness
+2. **Token 效率极致的 CSS 框架**
+   - `:root` CSS 变量确保主题一致无需重复定义
+   - 所有动画均使用 GPU 合成属性（`transform`、`opacity`），保证 60fps 流畅度
 
-3. **Deterministic Step Engine**
-   - `buildSteps()` simulates the algorithm in JS rather than using `eval()` — safe, predictable, and debuggable
-   - Each step is a pure state snapshot; `render()` is idempotent
+3. **确定性步骤引擎**
+   - `buildSteps()` 用纯 JavaScript 模拟算法逻辑，而非 `eval()` —— 安全、可预测、可调试
+   - 每个 step 都是纯状态快照；`render()` 是幂等的
 
-4. **Motion Design System**
-   - Cubic-bezier `[0.34, 1.56, 0.64, 1]` for bouncy pointer transitions
-   - Staggered `sortedPop` animations on completion for a "reward" feeling
-   - Pulsing yellow `borderPulse` on comparison hotspots
+4. **运动设计系统**
+   - 指针过渡使用弹性贝塞尔曲线 `[0.34, 1.56, 0.64, 1]`，带来轻盈的跳动感
+   - 完成时的 `sortedPop` 错开动画营造「奖励感」
+   - 比较热点的黄色 `borderPulse` 脉冲高亮，瞬间抓住视线
 
-5. **Accessibility & UX**
-   - Keyboard shortcuts reduce friction for presenters
-   - Speed slider (0.2x–2.0x) adapts to audience expertise
-   - Status messages in Chinese match the primary user demographic
+5. **无障碍体验**
+   - 键盘快捷键减少演讲者操作摩擦
+   - 速率滑块 (0.2x–2.0x) 适配不同受众：新手慢放，老鸟快进
+   - 状态信息采用中文，符合主要用户群体语言习惯
 
 ---
 
-## Project Structure
+## 项目结构
 
 ```
 claude-algo-visualizer/
-├── skill/                          # Claude Code Skill package
-│   ├── SKILL.md                    # Skill manifest & workflow instructions
-│   ├── _meta.json                  # Skill metadata
+├── skill/                          # Claude Code Skill 套件
+│   ├── SKILL.md                    # Skill 清单 & 工作流指令
+│   ├── _meta.json                  # 元数据
 │   └── assets/
-│       └── template.html           # Reusable HTML boilerplate (CSS + JS engine)
+│       └── template.html           # 可复用 HTML 脚手架（CSS + JS 引擎）
 ├── demo/
-│   └── sort-colors-demo.html     # LeetCode 75 — Sort Colors (Dutch National Flag)
-├── README.md                       # This file (English)
-├── README.zh.md                    # Chinese documentation
-└── LICENSE                         # MIT
+│   └── sort-colors-demo.html     # 力扣 75 — 色彩分类（荷兰国旗）
+├── README.md                       # 英文文档
+├── README.zh.md                    # 中文文档（本文件）
+└── LICENSE                         # MIT 协议
 ```
 
 ---
 
-## Demo Gallery
+## 演示集
 
-| Problem | Algorithm | File |
+| 题目 | 算法 | 文件 |
 |---------|-----------|------|
-| LeetCode 75 — Sort Colors | Three-way partition | `demo/sort-colors-demo.html` |
-| LeetCode 1855 — Max Distance | Monotonic two pointers | *(generate with skill)* |
-| LeetCode 3 — Longest Substring | Sliding window | *(generate with skill)* |
+| LeetCode 75 — 色彩分类 | 三路快排 | `demo/sort-colors-demo.html` |
+| LeetCode 1855 — 下标对中的最大距离 | 单调双指针 | *（用 Skill 生成）* |
+| LeetCode 3 — 无重复字符的最长子串 | 滑动窗口 | *（用 Skill 生成）* |
 
-> Want your demo featured? Open a PR with your generated `.html`!
+> 想让你的演示上榜？提交 PR ，附上你生成的 `.html`！
 
 ---
 
-## License
+## 开源协议
 
 MIT © 2026
 
 ---
-
-<p align="center">
-  If this skill helps you land an offer or go viral, give it a ⭐ and share the story!
-</p>
