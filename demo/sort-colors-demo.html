@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeetCode 75 - 颜色分类（荷兰国旗）- 算法动画演示</title>
+<style>
+  :root {
+    --bg: #0b0f19;
+    --panel: #111827;
+    --code-bg: #0d1117;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #10b981;
+    --accent-glow: rgba(16, 185, 129, 0.35);
+    --val0: #e11d48;
+    --val0-glow: rgba(225, 29, 72, 0.35);
+    --val1: #64748b;
+    --val2: #3b82f6;
+    --val2-glow: rgba(59, 130, 246, 0.35);
+    --ptr-i: #a855f7;
+    --ptr-p0: #10b981;
+    --ptr-p2: #f97316;
+    --btn: #1f2937;
+    --btn-hover: #374151;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(17,24,39,0.8);
+    backdrop-filter: blur(8px);
+  }
+  header h1 { font-size: 18px; margin: 0; font-weight: 600; letter-spacing: 0.5px; }
+  .controls { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    background: var(--btn);
+    border: 1px solid #374151;
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .btn:hover:not(:disabled) { background: var(--btn-hover); border-color: #4b5563; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn.primary { background: var(--accent); color: #022c22; border-color: var(--accent); font-weight: 600; }
+  .btn.primary:hover:not(:disabled) { background: #34d399; }
+  input[type=range] { width: 120px; accent-color: var(--accent); }
+  .speed-label { font-size: 12px; color: var(--muted); min-width: 60px; text-align: right; }
+
+  .main { flex: 1; display: grid; grid-template-columns: 480px 1fr; gap: 1px; background: #1f2937; overflow: hidden; }
+  .panel { background: var(--panel); padding: 20px; overflow: auto; }
+  .left { display: flex; flex-direction: column; gap: 16px; }
+  .right { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-bottom: 80px; }
+
+  .code-wrap { background: var(--code-bg); border: 1px solid #1f2937; border-radius: 10px; overflow: hidden; }
+  .code-header { padding: 10px 14px; font-size: 12px; color: var(--muted); border-bottom: 1px solid #1f2937; background: #0b0f14; }
+  pre { margin: 0; padding: 12px 0; font-family: "Fira Code", "Consolas", "Menlo", monospace; font-size: 12.5px; line-height: 1.65; overflow-x: auto; }
+  .line { display: flex; padding: 0 14px; position: relative; }
+  .line-num { width: 26px; text-align: right; color: #334155; user-select: none; margin-right: 10px; }
+  .line-content { color: #c9d1d9; white-space: pre; }
+  .line.active { background: rgba(16,185,129,0.08); }
+  .line.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .line.active .line-num { color: var(--accent); font-weight: 600; }
+  .kw { color: #ff7b72; }
+  .type { color: #ffa657; }
+  .var { color: #79c0ff; }
+  .method { color: #d2a8ff; }
+  .num { color: #79c0ff; }
+  .comment { color: #8b949e; font-style: italic; }
+
+  .status-card {
+    background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(16,185,129,0.02));
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .status-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(16,185,129,0.15); display: grid; place-items: center; font-size: 14px; }
+  .status-text { font-size: 14px; line-height: 1.5; }
+
+  /* Array visualization */
+  .viz-wrap { position: relative; display: flex; flex-direction: column; align-items: center; padding: 70px 20px 90px; }
+  .array-row { display: flex; gap: 10px; position: relative; }
+  .array-cell { width: 60px; display: flex; flex-direction: column; align-items: center; position: relative; }
+  .cell-box {
+    width: 56px; height: 56px; border-radius: 12px;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 20px; color: #fff;
+    border: 2px solid;
+    position: relative; z-index: 2;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  }
+  .cell-box.val-0 { background: linear-gradient(135deg, #9f1239, #e11d48); border-color: #fb7185; box-shadow: 0 0 16px var(--val0-glow); }
+  .cell-box.val-1 { background: linear-gradient(135deg, #475569, #64748b); border-color: #94a3b8; }
+  .cell-box.val-2 { background: linear-gradient(135deg, #1e3a8a, #3b82f6); border-color: #60a5fa; box-shadow: 0 0 16px var(--val2-glow); }
+
+  .cell-box.swapping { animation: swapPulse 0.55s ease-in-out; z-index: 10; }
+  @keyframes swapPulse {
+    0% { transform: scale(1) rotate(0deg); }
+    30% { transform: scale(1.18) rotate(-3deg); filter: brightness(1.25); }
+    60% { transform: scale(1.18) rotate(3deg); filter: brightness(1.25); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  .cell-box.highlight { animation: borderPulse 1.2s infinite; border-color: #facc15 !important; box-shadow: 0 0 20px rgba(250,204,21,0.4); }
+  @keyframes borderPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(250,204,21,0.4); }
+    50% { box-shadow: 0 0 32px rgba(250,204,21,0.7); }
+  }
+  .cell-box.sorted-pop { animation: sortedPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+  @keyframes sortedPop {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .cell-zone {
+    position: absolute;
+    bottom: -8px; left: 6px; right: 6px;
+    height: 4px; border-radius: 2px;
+    transition: all 0.35s;
+  }
+  .zone-0 { background: #e11d48; box-shadow: 0 0 8px rgba(225,29,72,0.5); }
+  .zone-1 { background: #94a3b8; }
+  .zone-2 { background: #3b82f6; box-shadow: 0 0 8px rgba(59,130,246,0.5); }
+
+  .cell-idx { font-size: 11px; color: #64748b; margin-top: 8px; font-family: "Fira Code", monospace; }
+
+  /* Pointers */
+  .ptr-layer { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 3; }
+  .ptr {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+  }
+  .ptr.visible { opacity: 1; }
+  .ptr-arrow { width: 0; height: 0; }
+  .ptr-i { top: 6px; }
+  .ptr-i .ptr-arrow { border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid var(--ptr-i); filter: drop-shadow(0 0 4px rgba(168,85,247,0.5)); }
+  .ptr-i .ptr-label { color: #d8b4fe; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); }
+  .ptr-p0 { bottom: 6px; }
+  .ptr-p0 .ptr-arrow { border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid var(--ptr-p0); filter: drop-shadow(0 0 4px rgba(16,185,129,0.5)); }
+  .ptr-p0 .ptr-label { color: #6ee7b7; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); }
+  .ptr-p2 { bottom: 6px; }
+  .ptr-p2 .ptr-arrow { border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 12px solid var(--ptr-p2); filter: drop-shadow(0 0 4px rgba(249,115,22,0.5)); }
+  .ptr-p2 .ptr-label { color: #fdba74; background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.3); }
+  .ptr-label { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 4px; white-space: nowrap; }
+
+  /* Legend */
+  .legend { display: flex; gap: 20px; margin-top: 40px; font-size: 12px; color: var(--muted); }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+  .progress-wrap { position: absolute; bottom: 24px; left: 24px; right: 24px; }
+  .progress-bar { height: 4px; background: #1f2937; border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .left { max-height: 40vh; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>LeetCode 75 - 颜色分类（荷兰国旗问题）- 三指针动画演示</h1>
+  <div class="controls">
+    <button class="btn" id="btnReset">重置</button>
+    <button class="btn primary" id="btnPrev">上一步</button>
+    <button class="btn primary" id="btnPlay">播放</button>
+    <button class="btn primary" id="btnNext">下一步</button>
+    <label style="display:flex;align-items:center;gap:8px;margin-left:8px;">
+      <span class="speed-label" id="speedLabel">1.0x</span>
+      <input type="range" id="speedRange" min="0.2" max="2.0" step="0.2" value="1.0">
+    </label>
+  </div>
+</header>
+
+<div class="main">
+  <div class="panel left">
+    <div class="code-wrap">
+      <div class="code-header">Solution.java</div>
+      <pre id="codeBlock">
+<div class="line" data-line="1"><span class="line-num">1</span><span class="line-content"><span class="kw">class</span> <span class="type">Solution</span> {</span></div>
+<div class="line" data-line="2"><span class="line-num">2</span><span class="line-content">  <span class="kw">public</span> <span class="kw">void</span> <span class="method">sortColors</span>(<span class="kw">int</span>[] <span class="var">nums</span>) {</span></div>
+<div class="line" data-line="3"><span class="line-num">3</span><span class="line-content">    <span class="kw">int</span> <span class="var">n</span> = <span class="var">nums</span>.length;</span></div>
+<div class="line" data-line="4"><span class="line-num">4</span><span class="line-content">    <span class="kw">int</span> <span class="var">p0</span> = <span class="num">0</span>, <span class="var">p2</span> = <span class="var">n</span> - <span class="num">1</span>;</span></div>
+<div class="line" data-line="5"><span class="line-num">5</span><span class="line-content">    <span class="kw">for</span> (<span class="kw">int</span> <span class="var">i</span> = <span class="num">0</span>; <span class="var">i</span> <= <span class="var">p2</span>; ++<span class="var">i</span>) {</span></div>
+<div class="line" data-line="6"><span class="line-num">6</span><span class="line-content">      <span class="kw">while</span> (<span class="var">i</span> <= <span class="var">p2</span> && <span class="var">nums</span>[<span class="var">i</span>] == <span class="num">2</span>) {</span></div>
+<div class="line" data-line="7"><span class="line-num">7</span><span class="line-content">        <span class="kw">int</span> <span class="var">temp</span> = <span class="var">nums</span>[<span class="var">i</span>];</span></div>
+<div class="line" data-line="8"><span class="line-num">8</span><span class="line-content">        <span class="var">nums</span>[<span class="var">i</span>] = <span class="var">nums</span>[<span class="var">p2</span>];</span></div>
+<div class="line" data-line="9"><span class="line-num">9</span><span class="line-content">        <span class="var">nums</span>[<span class="var">p2</span>] = <span class="var">temp</span>;</span></div>
+<div class="line" data-line="10"><span class="line-num">10</span><span class="line-content">        --<span class="var">p2</span>;</span></div>
+<div class="line" data-line="11"><span class="line-num">11</span><span class="line-content">      }</span></div>
+<div class="line" data-line="12"><span class="line-num">12</span><span class="line-content">      <span class="kw">if</span> (<span class="var">nums</span>[<span class="var">i</span>] == <span class="num">0</span>) {</span></div>
+<div class="line" data-line="13"><span class="line-num">13</span><span class="line-content">        <span class="kw">int</span> <span class="var">temp</span> = <span class="var">nums</span>[<span class="var">i</span>];</span></div>
+<div class="line" data-line="14"><span class="line-num">14</span><span class="line-content">        <span class="var">nums</span>[<span class="var">i</span>] = <span class="var">nums</span>[<span class="var">p0</span>];</span></div>
+<div class="line" data-line="15"><span class="line-num">15</span><span class="line-content">        <span class="var">nums</span>[<span class="var">p0</span>] = <span class="var">temp</span>;</span></div>
+<div class="line" data-line="16"><span class="line-num">16</span><span class="line-content">        ++<span class="var">p0</span>;</span></div>
+<div class="line" data-line="17"><span class="line-num">17</span><span class="line-content">      }</span></div>
+<div class="line" data-line="18"><span class="line-num">18</span><span class="line-content">    }</span></div>
+<div class="line" data-line="19"><span class="line-num">19</span><span class="line-content">  }</span></div>
+<div class="line" data-line="20"><span class="line-num">20</span><span class="line-content">}</span></div>
+      </pre>
+    </div>
+
+    <div class="status-card">
+      <div class="status-icon">🎨</div>
+      <div class="status-text" id="statusMsg">点击「播放」开始动画演示</div>
+    </div>
+  </div>
+
+  <div class="panel right" id="vizPanel">
+    <div class="viz-wrap" id="vizWrap">
+      <div class="array-row" id="arrayRow"></div>
+
+      <div class="ptr-layer">
+        <div class="ptr ptr-i" id="ptrI"><div class="ptr-arrow"></div><div class="ptr-label">i</div></div>
+        <div class="ptr ptr-p0" id="ptrP0"><div class="ptr-arrow"></div><div class="ptr-label">p0</div></div>
+        <div class="ptr ptr-p2" id="ptrP2"><div class="ptr-arrow"></div><div class="ptr-label">p2</div></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#e11d48"></div>0 区（红色）</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#64748b"></div>1 区（灰色）</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>2 区（蓝色）</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-info">
+        <span id="stepInfo">Step 0 / 0</span>
+        <span>三指针分区（Three-Way Partition）</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const INITIAL_ARRAY = [2, 0, 2, 1, 1, 0];
+
+  function buildSteps(initialNums) {
+    const steps = [];
+    let arr = [...initialNums];
+    const n = arr.length;
+
+    steps.push({line: 2, msg: `调用 sortColors([${initialNums.join(',')}])，准备将数组按 0,1,2 排序`, arr: [...arr]});
+    steps.push({line: 3, msg: `n = nums.length = ${n}`, arr: [...arr]});
+    steps.push({line: 4, msg: `初始化双指针：p0 = 0（0 的右边界），p2 = ${n-1}（2 的左边界）`, arr: [...arr], p0: 0, p2: n-1});
+
+    let p0 = 0, p2 = n - 1;
+
+    for (let i = 0; i <= p2; i++) {
+      steps.push({line: 5, msg: `for 循环开始：i = ${i}，当前待处理范围 [${i}, ${p2}]`, arr: [...arr], p0, i, p2});
+
+      let enteredWhile = false;
+      while (i <= p2 && arr[i] === 2) {
+        enteredWhile = true;
+        steps.push({line: 6, msg: `while 条件成立：nums[${i}] = 2，准备与 nums[${p2}] 交换`, arr: [...arr], p0, i, p2, highlight: [i, p2]});
+        steps.push({line: 7, msg: `temp = nums[${i}] = ${arr[i]}`, arr: [...arr], p0, i, p2, highlight: [i]});
+        steps.push({line: 8, msg: `nums[${i}] = nums[${p2}] = ${arr[p2]}`, arr: [...arr], p0, i, p2, swap: [i, p2]});
+
+        const temp = arr[i];
+        arr[i] = arr[p2];
+        arr[p2] = temp;
+
+        steps.push({line: 9, msg: `nums[${p2}] = temp = ${temp}，交换完成！数组变为 [${arr.join(',')}]`, arr: [...arr], p0, i, p2, swap: [i, p2]});
+        p2--;
+        steps.push({line: 10, msg: `p2-- → p2 = ${p2}（蓝色区域向左收缩）`, arr: [...arr], p0, i, p2});
+      }
+      if (!enteredWhile) {
+        steps.push({line: 6, msg: `检查 while：nums[${i}] = ${arr[i]} != 2，不进入循环`, arr: [...arr], p0, i, p2});
+      } else if (i > p2) {
+        steps.push({line: 6, msg: `while 结束：此时 i(${i}) > p2(${p2})`, arr: [...arr], p0, i, p2});
+      } else {
+        steps.push({line: 6, msg: `while 结束：nums[${i}] = ${arr[i]} != 2`, arr: [...arr], p0, i, p2});
+      }
+
+      if (i <= p2) {
+        if (arr[i] === 0) {
+          steps.push({line: 12, msg: `if 条件成立：nums[${i}] = 0，准备与 nums[${p0}] 交换`, arr: [...arr], p0, i, p2, highlight: [i, p0]});
+          steps.push({line: 13, msg: `temp = nums[${i}] = ${arr[i]}`, arr: [...arr], p0, i, p2, highlight: [i]});
+          steps.push({line: 14, msg: `nums[${i}] = nums[${p0}] = ${arr[p0]}`, arr: [...arr], p0, i, p2, swap: [i, p0]});
+
+          const temp = arr[i];
+          arr[i] = arr[p0];
+          arr[p0] = temp;
+
+          steps.push({line: 15, msg: `nums[${p0}] = temp = ${temp}，交换完成！数组变为 [${arr.join(',')}]`, arr: [...arr], p0, i, p2, swap: [i, p0]});
+          p0++;
+          steps.push({line: 16, msg: `p0++ → p0 = ${p0}（红色区域向右扩展）`, arr: [...arr], p0, i, p2});
+        } else {
+          steps.push({line: 12, msg: `检查 if：nums[${i}] = ${arr[i]} != 0，跳过`, arr: [...arr], p0, i, p2});
+        }
+      } else {
+        steps.push({line: 12, msg: `i > p2，跳过 if 判断`, arr: [...arr], p0, i, p2});
+      }
+
+      if (i + 1 <= p2) {
+        steps.push({line: 5, msg: `i++ → i = ${i+1}，继续下一轮循环`, arr: [...arr], p0, i: i+1, p2});
+      }
+    }
+
+    steps.push({line: 19, msg: `排序完成！最终结果：[${arr.join(',')}]，所有 0 在前，1 在中，2 在后`, arr: [...arr], done: true});
+    return steps;
+  }
+
+  const steps = buildSteps(INITIAL_ARRAY);
+  let idx = 0;
+  let timer = null;
+  let isPlaying = false;
+  let speed = 1.0;
+
+  const arrayRow = document.getElementById('arrayRow');
+  const ptrI = document.getElementById('ptrI');
+  const ptrP0 = document.getElementById('ptrP0');
+  const ptrP2 = document.getElementById('ptrP2');
+  const statusMsg = document.getElementById('statusMsg');
+  const progressFill = document.getElementById('progressFill');
+  const stepInfo = document.getElementById('stepInfo');
+  const codeLines = document.querySelectorAll('.line');
+  const vizWrap = document.getElementById('vizWrap');
+
+  function getStep() { return steps[Math.max(0, Math.min(idx, steps.length - 1))]; }
+
+  function createCell(val, index) {
+    const cell = document.createElement('div');
+    cell.className = 'array-cell';
+    cell.dataset.idx = index;
+    cell.innerHTML = `
+      <div class="cell-box val-${val}" data-val="${val}">
+        ${val}
+        <div class="cell-zone"></div>
+      </div>
+      <div class="cell-idx">${index}</div>
+    `;
+    return cell;
+  }
+
+  function render() {
+    const s = getStep();
+
+    // Code highlight
+    codeLines.forEach(l => l.classList.toggle('active', parseInt(l.dataset.line) === s.line));
+    statusMsg.textContent = s.msg;
+
+    // Build/update array cells
+    arrayRow.innerHTML = '';
+    s.arr.forEach((val, i) => {
+      const cell = createCell(val, i);
+      const box = cell.querySelector('.cell-box');
+
+      if (s.swap && s.swap.includes(i)) {
+        box.classList.add('swapping');
+      }
+      if (s.highlight && s.highlight.includes(i)) {
+        box.classList.add('highlight');
+      }
+      if (s.done) {
+        box.classList.add('sorted-pop');
+        box.style.animationDelay = (i * 0.05) + 's';
+      }
+
+      // Zone bar
+      const zone = cell.querySelector('.cell-zone');
+      if (s.p0 !== undefined && s.p2 !== undefined && s.i !== undefined) {
+        if (i < s.p0) zone.classList.add('zone-0');
+        else if (i >= s.p0 && i < s.i) zone.classList.add('zone-1');
+        else if (i >= s.i && i <= s.p2) zone.classList.add('zone-none');
+        else if (i > s.p2) zone.classList.add('zone-2');
+      } else if (s.p0 !== undefined && s.p2 !== undefined) {
+        if (i < s.p0) zone.classList.add('zone-0');
+        else if (i > s.p2) zone.classList.add('zone-2');
+      } else if (s.done) {
+        const v = s.arr[i];
+        if (v === 0) zone.classList.add('zone-0');
+        else if (v === 2) zone.classList.add('zone-2');
+        else zone.classList.add('zone-1');
+      }
+
+      arrayRow.appendChild(cell);
+    });
+
+    // Position pointers
+    positionPtr(ptrI, s.i);
+    positionPtr(ptrP0, s.p0, -18);
+    positionPtr(ptrP2, s.p2, 18);
+
+    // Progress
+    const pct = (idx / Math.max(1, steps.length - 1)) * 100;
+    progressFill.style.width = pct + '%';
+    stepInfo.textContent = `Step ${idx} / ${steps.length - 1}`;
+  }
+
+  function positionPtr(ptrEl, targetIdx, offsetX = 0) {
+    if (targetIdx === undefined || targetIdx === null) {
+      ptrEl.classList.remove('visible');
+      return;
+    }
+    const cell = arrayRow.children[targetIdx];
+    if (!cell) {
+      ptrEl.classList.remove('visible');
+      return;
+    }
+    ptrEl.classList.add('visible');
+    const rect = cell.querySelector('.cell-box').getBoundingClientRect();
+    const wrapRect = vizWrap.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2 - wrapRect.left;
+    ptrEl.style.left = (centerX + offsetX) + 'px';
+  }
+
+  function next() {
+    if (idx < steps.length - 1) { idx++; render(); return true; }
+    pause(); return false;
+  }
+  function prev() {
+    if (idx > 0) { idx--; render(); }
+  }
+  function reset() { pause(); idx = 0; render(); }
+  function play() {
+    if (isPlaying) return;
+    isPlaying = true;
+    document.getElementById('btnPlay').textContent = '暂停';
+    tick();
+  }
+  function pause() {
+    isPlaying = false;
+    if (timer) clearTimeout(timer);
+    document.getElementById('btnPlay').textContent = '播放';
+  }
+  function tick() {
+    if (!isPlaying) return;
+    const delay = Math.max(250, Math.round(900 / speed));
+    if (!next()) return;
+    timer = setTimeout(tick, delay);
+  }
+
+  document.getElementById('btnNext').addEventListener('click', () => { pause(); next(); });
+  document.getElementById('btnPrev').addEventListener('click', () => { pause(); prev(); });
+  document.getElementById('btnReset').addEventListener('click', reset);
+  document.getElementById('btnPlay').addEventListener('click', () => { isPlaying ? pause() : play(); });
+  document.getElementById('speedRange').addEventListener('input', e => {
+    speed = parseFloat(e.target.value);
+    document.getElementById('speedLabel').textContent = speed.toFixed(1) + 'x';
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { pause(); next(); }
+    else if (e.key === 'ArrowLeft') { pause(); prev(); }
+    else if (e.key === ' ') { e.preventDefault(); isPlaying ? pause() : play(); }
+  });
+
+  window.addEventListener('resize', () => {
+    const s = getStep();
+    positionPtr(ptrI, s.i);
+    positionPtr(ptrP0, s.p0, -18);
+    positionPtr(ptrP2, s.p2, 18);
+  });
+
+  render();
+</script>
+</body>
+</html>

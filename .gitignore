@@ -1,0 +1,17 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if user adds build tools later)
+node_modules/
+dist/
+
+# Claude Code local files
+.claude/
+.learnings/
